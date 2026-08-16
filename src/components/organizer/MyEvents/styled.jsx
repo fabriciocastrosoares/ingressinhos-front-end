@@ -1,0 +1,81 @@
+import styled from "styled-components";
+
+export const Section = styled.section`
+  background-color: white;
+
+  padding: 25px;
+
+  border-radius: 12px;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+`;
+
+export const SectionHeader = styled.div`
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 25px;
+
+  h2 {
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+`;
+
+export const RefreshButton = styled.button`
+  border: none;
+
+  background-color: #eee;
+
+  padding: 8px 15px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ddd;
+  }
+`;
+
+export const EventCard = styled.article`
+  border: 1px solid #e1e5eb;
+
+  border-radius: 12px;
+
+  padding: 20px;
+
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const EventTitle = styled.h3`
+  margin-bottom: 15px;
+`;
+
+export const EventDescription = styled.p`
+  margin: 8px 0;
+
+  color: #555;
+
+  line-height: 1.5;
+`;
+
+export const EventInfo = styled.p`
+  margin: 8px 0;
+
+  color: #555;
+`;

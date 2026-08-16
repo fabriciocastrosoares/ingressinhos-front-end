@@ -1,5 +1,5 @@
 import { Page, Left } from "./style";
-import InputsSignUp from "../../components/signInputs/InputSignup";
+import InputsSignUp from "../../components/signInputs/InputSignUp";
 
 export default function SignUpPage() {
   return (

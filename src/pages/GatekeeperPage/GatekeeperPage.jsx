@@ -1,29 +1,13 @@
-import { useContext } from "react";
-
-import { User } from "../../contexts/UserContext";
-
+import Header from "../../components/header/Header";
 import { Container } from "./styled";
+import GatekeeperComponent from "../../components/gatekeeper/GatekeeperComponent/GtekeeperComponent";
 
 export default function GatekeeperPage() {
-  const { user, logout } = useContext(User);
-
   return (
     <Container>
-      <header>
-        <h1>Ingressinho</h1>
+      <Header showLogout />
 
-        <button onClick={logout}>Sair</button>
-      </header>
-
-      <main>
-        <h2>Olá, {user?.username}!</h2>
-
-        <p>Valide os ingressos dos eventos.</p>
-
-        <div className="options">
-          <button>Validar ingresso</button>
-        </div>
-      </main>
+      <GatekeeperComponent />
     </Container>
   );
 }

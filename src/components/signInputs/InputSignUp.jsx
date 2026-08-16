@@ -1,17 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Container, InputWrapper, RoleLabel, RoleOptions } from "./style";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import apiAuth from "../../services/apiAuth";
 
 export default function InputsSignUp() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("CLIENT");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   async function cadastro(e) {
     e.preventDefault();
@@ -75,24 +77,48 @@ export default function InputsSignUp() {
 
         <InputWrapper>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder=" "
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+
           <label>Senha</label>
+
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+          >
+            {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+          </button>
         </InputWrapper>
 
         <InputWrapper>
           <input
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             placeholder=" "
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
+
           <label>Confirme a senha</label>
+
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            aria-label={
+              showConfirmPassword
+                ? "Ocultar confirmação de senha"
+                : "Mostrar confirmação de senha"
+            }
+          >
+            {showConfirmPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+          </button>
         </InputWrapper>
 
         <RoleLabel>Tipo de conta</RoleLabel>
