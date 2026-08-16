@@ -1,21 +1,38 @@
-import { useContext } from "react";
-import { User } from "../../../contexts/UserContext";
-import { Main, Options } from "./styled";
+import { useState } from "react";
+
+import ClientEvents from "../ClientEvents/ClientEvents";
+import MyTickets from "../MyTickets/MyTickets";
+
+import { Main, Tabs, Tab } from "./styled";
 
 export default function ClientComponent() {
-  const { user } = useContext(User);
+  const [activeTab, setActiveTab] = useState("events");
 
   return (
     <Main>
-      <h2>Olá, {user?.username}!</h2>
+      <h1>Área do Cliente</h1>
 
-      <p>Encontre eventos e compre seus ingressos.</p>
+      <p>Encontre eventos e gerencie seus ingressos.</p>
 
-      <Options>
-        <button>Ver eventos</button>
+      <Tabs>
+        <Tab
+          $active={activeTab === "events"}
+          onClick={() => setActiveTab("events")}
+        >
+          Eventos
+        </Tab>
 
-        <button>Meus ingressos</button>
-      </Options>
+        <Tab
+          $active={activeTab === "tickets"}
+          onClick={() => setActiveTab("tickets")}
+        >
+          Meus ingressos
+        </Tab>
+      </Tabs>
+
+      {activeTab === "events" && <ClientEvents />}
+
+      {activeTab === "tickets" && <MyTickets />}
     </Main>
   );
 }

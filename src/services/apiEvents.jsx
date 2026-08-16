@@ -19,11 +19,20 @@ function createEvent(body, token) {
   return axios.post(`${API_URL}/events`, body, createConfig(token));
 }
 
+function reserveEvent(id, body, token) {
+  return axios.post(
+    `${API_URL}/events/${id}/reserve`,
+    body,
+    createConfig(token),
+  );
+}
+
 const apiEvents = {
   getEvents,
   getEventById,
   getMyEvents,
   createEvent,
+  reserveEvent,
 };
 
 export default apiEvents;

@@ -1,35 +1,44 @@
 import styled from "styled-components";
 
 export const Main = styled.main`
-  padding: 40px;
+  width: 90%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  padding: 40px 0;
+
+  h1 {
+    margin-bottom: 10px;
+  }
+
+  > p {
+    color: #666;
+  }
 `;
 
-export const Options = styled.div`
+export const Tabs = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 10px;
 
-  margin-top: 30px;
+  margin: 30px 0;
 
-  button {
-    padding: 15px 25px;
+  border-bottom: 1px solid #ddd;
+`;
 
-    border: none;
-    border-radius: 10px;
+export const Tab = styled.button`
+  border: none;
+  background: transparent;
 
-    background-color: #0864f7;
-    color: white;
+  padding: 15px 20px;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    font-size: 15px;
-    font-weight: 600;
+  color: ${(props) => (props.$active ? "#0864f7" : "#777")};
 
-    &:hover {
-      background-color: #0053d6;
-    }
-  }
+  border-bottom: 3px solid
+    ${(props) => (props.$active ? "#0864f7" : "transparent")};
 
-  @media (max-width: 600px) {
-    flex-direction: column;
-  }
+  font-size: 15px;
+  font-weight: 600;
 `;
