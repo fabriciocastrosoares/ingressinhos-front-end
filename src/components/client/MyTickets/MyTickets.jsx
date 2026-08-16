@@ -74,48 +74,231 @@ export default function MyTickets() {
     const ticketElement = document.getElementById(`ticket-${ticket.id}`);
 
     if (!ticketElement) {
+      alert("Não foi possível encontrar o ingresso.");
       return;
     }
 
     const printWindow = window.open("", "_blank");
 
+    if (!printWindow) {
+      alert(
+        "Não foi possível abrir a janela de exportação. Verifique se o navegador bloqueou o pop-up.",
+      );
+      return;
+    }
+
+    const canvas = ticketElement.querySelector("canvas");
+
+    if (!canvas) {
+      alert("QR Code não encontrado.");
+      printWindow.close();
+      return;
+    }
+
+    const qrCodeImage = canvas.toDataURL("image/png");
+
+    const statusText =
+      ticket.status === "VALID"
+        ? "Válido"
+        : ticket.status === "USED"
+          ? "Utilizado"
+          : "Cancelado";
+
     printWindow.document.write(`
-      <html>
+      <!DOCTYPE html>
+      <html lang="pt-BR">
         <head>
+          <meta charset="UTF-8" />
+
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+
           <title>Ingresso - ${ticket.event.title}</title>
 
           <style>
+            * {
+              box-sizing: border-box;
+            }
+
             body {
-              font-family: Arial, sans-serif;
+              margin: 0;
               padding: 40px;
-              text-align: center;
+
+              font-family: Arial, sans-serif;
+
+              background-color: #ffffff;
+
+              display: flex;
+              justify-content: center;
             }
 
             .ticket {
+              width: 100%;
               max-width: 500px;
-              margin: 0 auto;
+
               padding: 30px;
+
               border: 1px solid #ddd;
               border-radius: 16px;
+
+              text-align: center;
+
+              background-color: #ffffff;
             }
 
-            h2 {
-              margin-bottom: 20px;
+            .header {
+              padding-bottom: 20px;
+
+              border-bottom: 1px solid #eeeeee;
             }
 
-            p {
-              margin: 8px 0;
+            .header span {
+              display: block;
+
+              margin-bottom: 10px;
+
+              font-size: 14px;
+
+              color: #777777;
             }
 
-            img {
-              margin-top: 20px;
+            .header h2 {
+              margin: 0;
+
+              font-size: 24px;
+
+              color: #222222;
+            }
+
+            .status {
+              margin-top: 15px;
+
+              font-size: 16px;
+
+              font-weight: bold;
+
+              color: ${
+                ticket.status === "VALID"
+                  ? "#065f46"
+                  : ticket.status === "USED"
+                    ? "#92400e"
+                    : "#991b1b"
+              };
+            }
+
+            .info {
+              padding: 25px 0;
+            }
+
+            .info p {
+              margin: 10px 0;
+
+              font-size: 15px;
+
+              color: #555555;
+            }
+
+            .qr-code {
+              padding-top: 10px;
+            }
+
+            .qr-code img {
+              display: block;
+
               width: 220px;
+              height: 220px;
+
+              margin: 0 auto;
+            }
+
+            .qr-code small {
+              display: block;
+
+              margin-top: 12px;
+
+              font-size: 13px;
+
+              color: #666666;
+            }
+
+            .footer {
+              margin-top: 25px;
+
+              padding-top: 15px;
+
+              border-top: 1px solid #eeeeee;
+
+              font-size: 12px;
+
+              color: #999999;
+            }
+
+            @media print {
+              body {
+                padding: 0;
+              }
+
+              .ticket {
+                border: none;
+                box-shadow: none;
+              }
             }
           </style>
         </head>
 
         <body>
-          ${ticketElement.innerHTML}
+
+          <div class="ticket">
+
+            <div class="header">
+
+              <span>INGRESSO</span>
+
+              <h2>
+                ${ticket.event.title}
+              </h2>
+
+              <div class="status">
+                ${statusText}
+              </div>
+
+            </div>
+
+            <div class="info">
+
+              <p>
+                <strong>Data:</strong>
+                ${new Date(ticket.event.date).toLocaleString("pt-BR")}
+              </p>
+
+              <p>
+                <strong>Local:</strong>
+                ${ticket.event.location || "Não informado"}
+              </p>
+
+            </div>
+
+            <div class="qr-code">
+
+              <img
+                src="${qrCodeImage}"
+                alt="QR Code do ingresso"
+              />
+
+              <small>
+                Apresente este QR Code na entrada
+              </small>
+
+            </div>
+
+            <div class="footer">
+              Ingressinho
+            </div>
+
+          </div>
+
         </body>
       </html>
     `);
@@ -123,6 +306,8 @@ export default function MyTickets() {
     printWindow.document.close();
 
     printWindow.onload = () => {
+      printWindow.focus();
+
       printWindow.print();
     };
   }
@@ -185,7 +370,7 @@ export default function MyTickets() {
 
               <QRCodeContainer>
                 <QRCodeCanvas
-                  value={ticket.shareToken}
+                  value={getTicketLink(ticket)}
                   size={220}
                   level="H"
                   includeMargin

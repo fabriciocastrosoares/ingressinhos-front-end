@@ -15,6 +15,10 @@ function getMyEvents(token) {
   return axios.get(`${API_URL}/events/my`, createConfig(token));
 }
 
+function getGatekeeperEvents(token) {
+  return axios.get(`${API_URL}/events/gatekeeper`, createConfig(token));
+}
+
 function createEvent(body, token) {
   return axios.post(`${API_URL}/events`, body, createConfig(token));
 }
@@ -31,6 +35,7 @@ const apiEvents = {
   getEvents,
   getEventById,
   getMyEvents,
+  getGatekeeperEvents,
   createEvent,
   reserveEvent,
 };

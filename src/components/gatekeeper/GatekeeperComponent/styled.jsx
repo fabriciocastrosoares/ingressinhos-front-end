@@ -1,28 +1,28 @@
 import styled from "styled-components";
 
 export const Main = styled.main`
-  padding: 40px;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 0;
 `;
 
-export const Options = styled.div`
-  margin-top: 30px;
+export const Welcome = styled.div`
+  margin-bottom: 35px;
 
-  button {
-    padding: 15px 25px;
+  h1 {
+    margin-bottom: 10px;
+    color: #222;
+  }
 
-    border: none;
-    border-radius: 10px;
+  p {
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 16px;
+  }
 
-    background-color: #0864f7;
-    color: white;
-
-    cursor: pointer;
-
-    font-size: 15px;
-    font-weight: 600;
-
-    &:hover {
-      background-color: #0053d6;
-    }
+  span {
+    color: #777;
+    font-size: 14px;
   }
 `;
