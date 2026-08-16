@@ -1,5 +1,7 @@
 import { useContext } from "react";
+
 import { User } from "../../contexts/UserContext";
+
 import { ContainerHeader, Text, LogoutButton } from "./style";
 
 export default function Header({ showLogout = false }) {

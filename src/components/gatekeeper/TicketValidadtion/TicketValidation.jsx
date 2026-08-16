@@ -70,10 +70,6 @@ export default function TicketValidation({ event, onBack }) {
 
     try {
       setResult(null);
-
-      /*
-       * O elemento #qr-reader já existe no DOM.
-       */
       const scanner = new Html5Qrcode("qr-reader");
 
       scannerRef.current = scanner;
@@ -100,9 +96,7 @@ export default function TicketValidation({ event, onBack }) {
 
           await handleValidate(decodedText);
         },
-        () => {
-          // Ignora os erros enquanto a câmera procura o QR Code.
-        },
+        () => {},
       );
     } catch (error) {
       console.error("Erro ao abrir câmera:", error);
@@ -176,12 +170,6 @@ export default function TicketValidation({ event, onBack }) {
         {scanning ? "Fechar câmera" : "📷 Ler QR Code"}
       </CameraButton>
 
-      {/*
-        IMPORTANTE:
-        O #qr-reader fica sempre no DOM.
-        Apenas a área inteira fica escondida quando
-        a câmera não está sendo utilizada.
-      */}
       <ScannerContainer $visible={scanning}>
         <div id="qr-reader"></div>
 

@@ -24,20 +24,25 @@ export default function TicketScanner() {
   const [error, setError] = useState("");
 
   async function stopScanner() {
-    if (!scannerRef.current) {
+    const scanner = scannerRef.current;
+
+    if (!scanner) {
+      setScanning(false);
       return;
     }
 
     try {
-      await scannerRef.current.stop();
-      await scannerRef.current.clear();
+      if (scanner.isScanning) {
+        await scanner.stop();
+      }
+
+      await scanner.clear();
     } catch (error) {
       console.error("Erro ao parar scanner:", error);
+    } finally {
+      scannerRef.current = null;
+      setScanning(false);
     }
-
-    scannerRef.current = null;
-
-    setScanning(false);
   }
 
   async function validateTicket(token) {
@@ -80,6 +85,10 @@ export default function TicketScanner() {
     setError("");
     setResult(null);
 
+    if (scannerRef.current) {
+      return;
+    }
+
     try {
       const scanner = new Html5Qrcode("qr-reader");
 
@@ -93,20 +102,27 @@ export default function TicketScanner() {
         },
         {
           fps: 10,
+
           qrbox: {
             width: 250,
             height: 250,
           },
         },
+
         async (decodedText) => {
           let token = decodedText;
 
           /*
-           * Se o QR Code contiver a URL:
+           * O QR Code pode conter:
            *
-           * http://localhost:5173/ticket/abc123
+           * https://site.com/ticket/abc123
            *
-           * pegamos somente o shareToken.
+           * ou apenas:
+           *
+           * abc123
+           *
+           * Se for uma URL, extraímos somente
+           * o shareToken.
            */
 
           try {
@@ -121,40 +137,48 @@ export default function TicketScanner() {
             }
           } catch {
             /*
-             * Caso o QR contenha diretamente o shareToken,
-             * usamos o valor original.
+             * Se não for uma URL, usamos
+             * o próprio texto como token.
              */
           }
 
           await validateTicket(token);
         },
+
         () => {
-          // Erros de leitura são ignorados enquanto a câmera continua.
+          /*
+           * Erros de leitura são ignorados.
+           *
+           * A câmera continua funcionando
+           * procurando um QR Code.
+           */
         },
       );
     } catch (error) {
       console.error("Erro ao iniciar câmera:", error);
 
+      scannerRef.current = null;
+
       setScanning(false);
 
       setError(
-        "Não foi possível acessar a câmera. Verifique a permissão do navegador.",
+        "Não foi possível acessar a câmera. Verifique se o navegador possui permissão para utilizá-la.",
       );
-
-      scannerRef.current = null;
     }
   }
 
   async function handleManualSubmit(event) {
     event.preventDefault();
 
-    if (!shareToken.trim()) {
+    const token = shareToken.trim();
+
+    if (!token) {
       setError("Informe o código do ingresso.");
 
       return;
     }
 
-    await validateTicket(shareToken.trim());
+    await validateTicket(token);
   }
 
   function handleNewScan() {
@@ -165,10 +189,18 @@ export default function TicketScanner() {
     startScanner();
   }
 
+  function handleTryAgain() {
+    setError("");
+    setResult(null);
+    setShareToken("");
+  }
+
   useEffect(() => {
     return () => {
-      if (scannerRef.current) {
-        scannerRef.current
+      const scanner = scannerRef.current;
+
+      if (scanner) {
+        scanner
           .stop()
           .catch(() => {})
           .finally(() => {
@@ -188,7 +220,7 @@ export default function TicketScanner() {
 
           {!scanning && (
             <Button type="button" onClick={startScanner}>
-              Abrir câmera
+              📷 Abrir câmera
             </Button>
           )}
 
@@ -215,6 +247,7 @@ export default function TicketScanner() {
               placeholder="Código do ingresso"
               value={shareToken}
               onChange={(event) => setShareToken(event.target.value)}
+              autoComplete="off"
             />
 
             <Button type="submit">Validar ingresso</Button>
@@ -266,13 +299,7 @@ export default function TicketScanner() {
             <p>{error}</p>
           </Result>
 
-          <Button
-            type="button"
-            onClick={() => {
-              setError("");
-              setShareToken("");
-            }}
-          >
+          <Button type="button" onClick={handleTryAgain}>
             Tentar novamente
           </Button>
         </ErrorResult>

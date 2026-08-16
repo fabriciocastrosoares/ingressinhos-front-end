@@ -1,30 +1,44 @@
 import styled from "styled-components";
 
 export const Container = styled.section`
-  background-color: white;
+  width: 100%;
+  max-width: 900px;
+
+  margin: 0 auto;
 
   padding: 30px;
+
+  background-color: #ffffff;
 
   border-radius: 12px;
 
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 
+  box-sizing: border-box;
+
   .back {
     border: none;
-
     background: transparent;
 
     color: #0864f7;
 
+    font-size: 15px;
+    font-weight: 600;
+
     cursor: pointer;
 
-    font-size: 15px;
-
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
 
   h2 {
-    margin-bottom: 20px;
+    margin: 0 0 15px;
+
+    font-size: 28px;
+  }
+
+  > p {
+    color: #555;
+    line-height: 1.6;
   }
 
   .info {
@@ -40,52 +54,90 @@ export const Container = styled.section`
   .reservation {
     margin-top: 30px;
 
-    padding-top: 25px;
+    padding: 20px;
 
-    border-top: 1px solid #ddd;
+    border-radius: 10px;
+
+    background-color: #f5f7fb;
 
     display: flex;
-
     flex-direction: column;
 
-    gap: 12px;
+    gap: 10px;
 
-    max-width: 400px;
+    label {
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+
+      max-width: 200px;
+
+      padding: 12px;
+
+      border: 1px solid #ccc;
+      border-radius: 8px;
+
+      box-sizing: border-box;
+
+      font-size: 15px;
+    }
+
+    p {
+      margin: 5px 0;
+    }
+
+    button {
+      width: fit-content;
+
+      min-height: 44px;
+
+      padding: 12px 20px;
+
+      border: none;
+      border-radius: 8px;
+
+      background-color: #0864f7;
+
+      color: white;
+
+      font-weight: 600;
+
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
   }
 
-  .reservation label {
-    font-weight: 600;
+  @media (max-width: 768px) {
+    padding: 25px;
+
+    h2 {
+      font-size: 24px;
+    }
   }
 
-  .reservation input {
-    padding: 12px;
+  @media (max-width: 480px) {
+    padding: 18px;
 
-    border: 1px solid #ccc;
+    h2 {
+      font-size: 21px;
+    }
 
-    border-radius: 8px;
+    .reservation {
+      padding: 15px;
 
-    font-size: 16px;
-  }
+      input {
+        max-width: none;
+      }
 
-  .reservation button {
-    padding: 12px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    background-color: #0864f7;
-
-    color: white;
-
-    cursor: pointer;
-
-    font-weight: 600;
-
-    &:disabled {
-      opacity: 0.5;
-
-      cursor: not-allowed;
+      button {
+        width: 100%;
+      }
     }
   }
 `;

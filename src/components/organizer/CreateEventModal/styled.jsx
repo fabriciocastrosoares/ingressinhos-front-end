@@ -1,21 +1,28 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  margin-top: 15px;
+  width: 100%;
+  margin-top: 20px;
 `;
 
 export const CreateButton = styled.button`
+  width: 100%;
+
+  min-height: 44px;
+
   padding: 10px 18px;
 
   border: none;
+
   border-radius: 8px;
 
   background-color: #0864f7;
+
   color: white;
 
-  cursor: pointer;
-
   font-weight: 600;
+
+  cursor: pointer;
 
   &:hover {
     background-color: #0053d6;
@@ -23,9 +30,10 @@ export const CreateButton = styled.button`
 `;
 
 export const Form = styled.form`
-  margin-top: 20px;
+  width: 100%;
 
   display: flex;
+
   flex-direction: column;
 
   gap: 15px;
@@ -33,21 +41,27 @@ export const Form = styled.form`
 
 export const Field = styled.div`
   display: flex;
+
   flex-direction: column;
 
-  gap: 5px;
+  gap: 6px;
 
   label {
     font-size: 14px;
+
     font-weight: 600;
   }
 
   input {
+    width: 100%;
+
     padding: 12px;
 
     border: 1px solid #ccc;
 
     border-radius: 8px;
+
+    box-sizing: border-box;
 
     font-size: 15px;
 
@@ -64,40 +78,55 @@ export const Actions = styled.div`
 
   gap: 10px;
 
-  flex-wrap: wrap;
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
 `;
 
 export const ConfirmButton = styled.button`
-  padding: 10px 18px;
+  flex: 1;
+
+  min-height: 44px;
+
+  padding: 10px;
 
   border: none;
+
   border-radius: 8px;
 
   background-color: #0864f7;
-  color: white;
 
-  cursor: pointer;
+  color: white;
 
   font-weight: 600;
 
+  cursor: pointer;
+
   &:disabled {
     opacity: 0.6;
+
     cursor: not-allowed;
   }
 `;
 
 export const CancelButton = styled.button`
-  padding: 10px 18px;
+  flex: 1;
+
+  min-height: 44px;
+
+  padding: 10px;
 
   border: none;
+
   border-radius: 8px;
 
   background-color: #777;
+
   color: white;
 
-  cursor: pointer;
-
   font-weight: 600;
+
+  cursor: pointer;
 
   &:hover {
     background-color: #666;
