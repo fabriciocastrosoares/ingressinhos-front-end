@@ -24,7 +24,9 @@ export default function TicketValidation({ event, onBack }) {
   const [result, setResult] = useState(null);
 
   async function handleValidate(token = shareToken) {
-    if (!token.trim()) {
+    const cleanToken = token.trim();
+
+    if (!cleanToken) {
       alert("Informe ou leia o QR Code do ingresso.");
       return;
     }
@@ -37,7 +39,8 @@ export default function TicketValidation({ event, onBack }) {
 
       const response = await apiTickets.validate(
         {
-          shareToken: token.trim(),
+          shareToken: cleanToken,
+          eventId: event.id,
         },
         authToken,
       );
