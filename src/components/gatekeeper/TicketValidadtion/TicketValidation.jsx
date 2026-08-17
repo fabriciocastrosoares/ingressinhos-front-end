@@ -70,6 +70,7 @@ export default function TicketValidation({ event, onBack }) {
 
     try {
       setResult(null);
+
       const scanner = new Html5Qrcode("qr-reader");
 
       scannerRef.current = scanner;
@@ -90,11 +91,29 @@ export default function TicketValidation({ event, onBack }) {
         async (decodedText) => {
           console.log("QR Code encontrado:", decodedText);
 
+          let token = decodedText.trim();
+
+          try {
+            const url = new URL(decodedText);
+
+            const parts = url.pathname.split("/").filter(Boolean);
+
+            const ticketIndex = parts.indexOf("ticket");
+
+            if (ticketIndex !== -1 && parts[ticketIndex + 1]) {
+              token = parts[ticketIndex + 1];
+            }
+          } catch {
+            // Se não for uma URL, considera o próprio conteúdo como shareToken.
+          }
+
+          console.log("ShareToken extraído:", token);
+
           await stopScanner();
 
-          setShareToken(decodedText);
+          setShareToken(token);
 
-          await handleValidate(decodedText);
+          await handleValidate(token);
         },
         () => {},
       );

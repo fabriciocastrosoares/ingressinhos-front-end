@@ -46,7 +46,9 @@ export default function TicketScanner() {
   }
 
   async function validateTicket(token) {
-    if (!token) {
+    const cleanToken = token?.trim();
+
+    if (!cleanToken) {
       return;
     }
 
@@ -58,7 +60,7 @@ export default function TicketScanner() {
 
       const response = await apiTickets.validate(
         {
-          shareToken: token,
+          shareToken: cleanToken,
         },
         authToken,
       );
@@ -82,14 +84,13 @@ export default function TicketScanner() {
   }
 
   async function startScanner() {
-    setError("");
-    setResult(null);
-
     if (scannerRef.current) {
       return;
     }
 
     try {
+      setResult(null);
+
       const scanner = new Html5Qrcode("qr-reader");
 
       scannerRef.current = scanner;
@@ -102,20 +103,20 @@ export default function TicketScanner() {
         },
         {
           fps: 10,
-
           qrbox: {
             width: 250,
             height: 250,
           },
         },
-
         async (decodedText) => {
-          let token = decodedText;
+          console.log("QR Code encontrado:", decodedText);
+
+          let token = decodedText.trim();
 
           try {
             const url = new URL(decodedText);
 
-            const parts = url.pathname.split("/");
+            const parts = url.pathname.split("/").filter(Boolean);
 
             const ticketIndex = parts.indexOf("ticket");
 
@@ -123,23 +124,27 @@ export default function TicketScanner() {
               token = parts[ticketIndex + 1];
             }
           } catch {
-            // O QR Code pode conter diretamente o shareToken.
+            // Se não for uma URL, considera o próprio conteúdo como shareToken.
           }
+
+          console.log("ShareToken extraído:", token);
+
+          await stopScanner();
+
+          setShareToken(token);
 
           await validateTicket(token);
         },
-
         () => {},
       );
     } catch (error) {
-      console.error("Erro ao iniciar câmera:", error);
+      console.error("Erro ao abrir câmera:", error);
 
       scannerRef.current = null;
-
       setScanning(false);
 
-      setError(
-        "Não foi possível acessar a câmera. Verifique se o navegador possui permissão para utilizá-la.",
+      alert(
+        "Não foi possível abrir a câmera. Verifique se o navegador possui permissão para utilizá-la.",
       );
     }
   }
