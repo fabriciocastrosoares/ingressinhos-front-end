@@ -83,12 +83,6 @@ export const ScannerContainer = styled.div`
 
   display: ${(props) => (props.$active ? "block" : "none")};
 
-  /*
-   * O html5-qrcode cria elementos internos dentro
-   * desse container. Essas regras deixam a câmera
-   * responsiva.
-   */
-
   #qr-reader {
     width: 100% !important;
     max-width: 450px;

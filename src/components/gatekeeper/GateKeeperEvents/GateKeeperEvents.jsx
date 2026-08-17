@@ -36,7 +36,37 @@ export default function GatekeeperEvents({ onSelectEvent }) {
   }
 
   useEffect(() => {
-    loadEvents();
+    let active = true;
+
+    async function fetchEvents() {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await apiEvents.getGatekeeperEvents(token);
+
+        if (active) {
+          setEvents(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar eventos da portaria:", error);
+
+        if (active) {
+          alert(
+            error.response?.data?.message ||
+              "Não foi possível carregar os eventos.",
+          );
+
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchEvents();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (

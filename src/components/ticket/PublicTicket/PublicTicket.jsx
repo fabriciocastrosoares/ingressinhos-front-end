@@ -20,28 +20,39 @@ export default function PublicTicket() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  async function loadTicket() {
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await apiTickets.getPublicTicket(shareToken);
-
-      setTicket(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar ingresso:", error);
-
-      setError(
-        error.response?.data?.message ||
-          "Não foi possível encontrar este ingresso.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    loadTicket();
+    let active = true;
+
+    async function fetchTicket() {
+      try {
+        const response = await apiTickets.getPublicTicket(shareToken);
+
+        if (active) {
+          setTicket(response.data);
+          setError("");
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar ingresso:", error);
+
+        if (active) {
+          setError(
+            error.response?.data?.message ||
+              "Não foi possível encontrar este ingresso.",
+          );
+
+          setLoading(false);
+        }
+      }
+    }
+
+    if (shareToken) {
+      fetchTicket();
+    }
+
+    return () => {
+      active = false;
+    };
   }, [shareToken]);
 
   if (loading) {

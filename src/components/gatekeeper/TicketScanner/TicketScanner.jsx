@@ -112,19 +112,6 @@ export default function TicketScanner() {
         async (decodedText) => {
           let token = decodedText;
 
-          /*
-           * O QR Code pode conter:
-           *
-           * https://site.com/ticket/abc123
-           *
-           * ou apenas:
-           *
-           * abc123
-           *
-           * Se for uma URL, extraímos somente
-           * o shareToken.
-           */
-
           try {
             const url = new URL(decodedText);
 
@@ -136,23 +123,13 @@ export default function TicketScanner() {
               token = parts[ticketIndex + 1];
             }
           } catch {
-            /*
-             * Se não for uma URL, usamos
-             * o próprio texto como token.
-             */
+            // O QR Code pode conter diretamente o shareToken.
           }
 
           await validateTicket(token);
         },
 
-        () => {
-          /*
-           * Erros de leitura são ignorados.
-           *
-           * A câmera continua funcionando
-           * procurando um QR Code.
-           */
-        },
+        () => {},
       );
     } catch (error) {
       console.error("Erro ao iniciar câmera:", error);

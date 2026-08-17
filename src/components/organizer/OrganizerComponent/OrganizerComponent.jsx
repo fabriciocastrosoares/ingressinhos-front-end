@@ -55,7 +55,41 @@ export default function OrganizerComponent() {
   }
 
   useEffect(() => {
-    reloadEvents();
+    let active = true;
+
+    async function fetchEvents() {
+      try {
+        setLoading(true);
+        setLoadingMyEvents(true);
+
+        const [eventsResponse, myEventsResponse] = await Promise.all([
+          apiEvents.getEvents(),
+          apiEvents.getMyEvents(localStorage.getItem("token")),
+        ]);
+
+        if (active) {
+          setEvents(eventsResponse.data);
+          setMyEvents(myEventsResponse.data);
+          setLoading(false);
+          setLoadingMyEvents(false);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar eventos:", error);
+
+        if (active) {
+          alert("Não foi possível carregar os eventos.");
+
+          setLoading(false);
+          setLoadingMyEvents(false);
+        }
+      }
+    }
+
+    fetchEvents();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (

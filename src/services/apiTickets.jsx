@@ -19,11 +19,16 @@ function validate(body, token) {
   return axios.post(`${API_URL}/tickets/validate`, body, createConfig(token));
 }
 
+function getPublicTicket(shareToken) {
+  return axios.get(`${API_URL}/tickets/public/${shareToken}`);
+}
+
 const apiTickets = {
   buy,
   getMyTickets,
   getByCode,
   validate,
+  getPublicTicket,
 };
 
 export default apiTickets;

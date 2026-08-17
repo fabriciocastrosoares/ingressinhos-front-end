@@ -41,7 +41,37 @@ export default function MyTickets() {
   }
 
   useEffect(() => {
-    loadTickets();
+    let active = true;
+
+    async function fetchTickets() {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await apiTickets.getMyTickets(token);
+
+        if (active) {
+          setTickets(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar ingressos:", error);
+
+        if (active) {
+          alert(
+            error.response?.data?.message ||
+              "Não foi possível carregar seus ingressos.",
+          );
+
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchTickets();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   function getTicketLink(ticket) {

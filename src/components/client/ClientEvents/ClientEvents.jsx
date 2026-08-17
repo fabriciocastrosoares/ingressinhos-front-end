@@ -27,7 +27,31 @@ export default function ClientEvents() {
   }
 
   useEffect(() => {
-    loadEvents();
+    let active = true;
+
+    async function fetchEvents() {
+      try {
+        const response = await apiEvents.getEvents();
+
+        if (active) {
+          setEvents(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar eventos:", error);
+
+        if (active) {
+          alert("Não foi possível carregar os eventos.");
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchEvents();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (
